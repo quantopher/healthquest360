@@ -1,0 +1,2696 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Health Quest 360°</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Fredoka+One&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --green: #2ecc71;
+    --green-dark: #27ae60;
+    --blue: #3498db;
+    --blue-dark: #2980b9;
+    --orange: #f39c12;
+    --red: #e74c3c;
+    --purple: #9b59b6;
+    --teal: #1abc9c;
+    --bg: #0f1923;
+    --bg2: #162230;
+    --bg3: #1e2f40;
+    --card: #1a2a3a;
+    --card2: #213347;
+    --text: #e8f4f8;
+    --text2: #8faec4;
+    --gold: #f1c40f;
+    --xp-bar: #2ecc71;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* SCREENS */
+  .screen { display: none; min-height: 100vh; }
+  .screen.active { display: flex; flex-direction: column; }
+
+  /* ===== WELCOME SCREEN ===== */
+  #welcome {
+    align-items: center;
+    justify-content: center;
+    background: radial-gradient(ellipse at 30% 20%, #1a3a2a 0%, var(--bg) 60%),
+                radial-gradient(ellipse at 80% 80%, #1a2a3a 0%, transparent 50%);
+    padding: 20px;
+    text-align: center;
+  }
+
+  .logo-area { margin-bottom: 40px; }
+
+  .logo-icon {
+    font-size: 80px;
+    display: block;
+    animation: pulse 2s infinite;
+    filter: drop-shadow(0 0 20px rgba(46,204,113,0.5));
+  }
+
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.08); }
+  }
+
+  .logo-title {
+    font-family: 'Fredoka One', cursive;
+    font-size: 48px;
+    color: var(--green);
+    text-shadow: 0 0 30px rgba(46,204,113,0.4);
+    line-height: 1;
+    margin-top: 10px;
+  }
+
+  .logo-sub {
+    font-size: 16px;
+    color: var(--text2);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-top: 8px;
+  }
+
+  .welcome-card {
+    background: var(--card);
+    border: 1px solid rgba(46,204,113,0.2);
+    border-radius: 24px;
+    padding: 40px;
+    max-width: 440px;
+    width: 100%;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+  }
+
+  .welcome-card h2 {
+    font-size: 22px;
+    font-weight: 800;
+    margin-bottom: 8px;
+  }
+
+  .welcome-card p {
+    color: var(--text2);
+    margin-bottom: 30px;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  .input-group {
+    margin-bottom: 16px;
+  }
+
+  .input-group label {
+    display: block;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text2);
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .input-group input {
+    width: 100%;
+    background: var(--bg3);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 12px;
+    padding: 14px 16px;
+    color: var(--text);
+    font-family: 'Nunito', sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    transition: border-color 0.2s;
+    outline: none;
+  }
+
+  .input-group input:focus {
+    border-color: var(--green);
+    box-shadow: 0 0 0 3px rgba(46,204,113,0.15);
+  }
+
+  .avatar-select {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 24px;
+  }
+
+  .avatar-opt {
+    flex: 1;
+    background: var(--bg3);
+    border: 2px solid rgba(255,255,255,0.1);
+    border-radius: 12px;
+    padding: 16px 8px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 11px;
+    color: var(--text2);
+    font-weight: 700;
+  }
+
+  .avatar-opt .av-emoji { font-size: 32px; display: block; margin-bottom: 6px; }
+
+  .avatar-opt:hover, .avatar-opt.selected {
+    border-color: var(--green);
+    background: rgba(46,204,113,0.1);
+    color: var(--green);
+  }
+
+  .btn-primary {
+    width: 100%;
+    background: linear-gradient(135deg, var(--green), var(--teal));
+    border: none;
+    border-radius: 14px;
+    padding: 16px;
+    color: white;
+    font-family: 'Fredoka One', cursive;
+    font-size: 18px;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 8px 20px rgba(46,204,113,0.3);
+  }
+
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 28px rgba(46,204,113,0.4);
+  }
+
+  .btn-primary:active { transform: translateY(0); }
+
+  /* ===== MAIN GAME ===== */
+  #game { flex-direction: column; }
+
+  /* TOP BAR */
+  .topbar {
+    background: var(--bg2);
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    padding: 14px 20px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .player-info { display: flex; align-items: center; gap: 10px; flex: 1; }
+
+  .player-avatar-sm {
+    width: 42px; height: 42px;
+    background: linear-gradient(135deg, var(--green), var(--teal));
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px;
+    flex-shrink: 0;
+  }
+
+  .player-name-area { flex: 1; min-width: 0; }
+
+  .player-name-sm {
+    font-weight: 800;
+    font-size: 15px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .level-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: rgba(241,196,15,0.15);
+    border: 1px solid rgba(241,196,15,0.3);
+    border-radius: 20px;
+    padding: 2px 8px;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--gold);
+  }
+
+  .xp-bar-wrap { flex: 1; max-width: 160px; }
+
+  .xp-label {
+    font-size: 11px;
+    color: var(--text2);
+    margin-bottom: 3px;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .xp-bar-bg {
+    background: var(--bg3);
+    border-radius: 10px;
+    height: 8px;
+    overflow: hidden;
+  }
+
+  .xp-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--green), var(--teal));
+    border-radius: 10px;
+    transition: width 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  .coins-display {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(241,196,15,0.1);
+    border: 1px solid rgba(241,196,15,0.2);
+    border-radius: 20px;
+    padding: 6px 12px;
+    font-weight: 800;
+    font-size: 14px;
+    color: var(--gold);
+  }
+
+  /* TABS */
+  .tabs {
+    display: flex;
+    background: var(--bg2);
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .tabs::-webkit-scrollbar { display: none; }
+
+  .tab {
+    flex: 1;
+    min-width: 70px;
+    padding: 12px 8px;
+    text-align: center;
+    cursor: pointer;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text2);
+    border-bottom: 3px solid transparent;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+
+  .tab .tab-icon { font-size: 20px; display: block; margin-bottom: 3px; }
+
+  .tab:hover { color: var(--text); background: rgba(255,255,255,0.03); }
+
+  .tab.active {
+    color: var(--green);
+    border-bottom-color: var(--green);
+    background: rgba(46,204,113,0.05);
+  }
+
+  /* CONTENT */
+  .content { flex: 1; padding: 20px; overflow-y: auto; }
+
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+
+  /* SECTION HEADER */
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+
+  .section-header h2 {
+    font-family: 'Fredoka One', cursive;
+    font-size: 22px;
+  }
+
+  .section-header .day-badge {
+    margin-left: auto;
+    background: rgba(52,152,219,0.15);
+    border: 1px solid rgba(52,152,219,0.3);
+    border-radius: 20px;
+    padding: 4px 12px;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--blue);
+  }
+
+  /* QUEST CARD */
+  .quest-card {
+    background: var(--card);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 18px;
+    padding: 18px;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    transition: all 0.2s;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .quest-card::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 4px;
+    border-radius: 4px 0 0 4px;
+  }
+
+  .quest-card.nutrition::before { background: var(--green); }
+  .quest-card.screen::before { background: var(--blue); }
+  .quest-card.steps::before { background: var(--orange); }
+  .quest-card.mind::before { background: var(--purple); }
+
+  .quest-card:hover { transform: translateX(4px); border-color: rgba(255,255,255,0.12); }
+  .quest-card.completed { opacity: 0.6; }
+  .quest-card.completed:hover { transform: none; }
+
+  .quest-icon {
+    width: 52px; height: 52px;
+    border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 26px;
+    flex-shrink: 0;
+  }
+
+  .quest-card.nutrition .quest-icon { background: rgba(46,204,113,0.15); }
+  .quest-card.screen .quest-icon { background: rgba(52,152,219,0.15); }
+  .quest-card.steps .quest-icon { background: rgba(243,156,18,0.15); }
+  .quest-card.mind .quest-icon { background: rgba(155,89,182,0.15); }
+
+  .quest-info { flex: 1; min-width: 0; }
+
+  .quest-title {
+    font-weight: 800;
+    font-size: 15px;
+    margin-bottom: 4px;
+  }
+
+  .quest-desc {
+    font-size: 12px;
+    color: var(--text2);
+    margin-bottom: 8px;
+    line-height: 1.4;
+  }
+
+  .quest-progress-bar {
+    background: var(--bg3);
+    border-radius: 10px;
+    height: 6px;
+    overflow: hidden;
+    margin-bottom: 4px;
+  }
+
+  .quest-progress-fill {
+    height: 100%;
+    border-radius: 10px;
+    transition: width 0.5s ease;
+  }
+
+  .quest-card.nutrition .quest-progress-fill { background: var(--green); }
+  .quest-card.screen .quest-progress-fill { background: var(--blue); }
+  .quest-card.steps .quest-progress-fill { background: var(--orange); }
+  .quest-card.mind .quest-progress-fill { background: var(--purple); }
+
+  .quest-progress-label {
+    font-size: 11px;
+    color: var(--text2);
+  }
+
+  .quest-reward {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 4px;
+    flex-shrink: 0;
+  }
+
+  .xp-reward {
+    background: rgba(46,204,113,0.15);
+    border: 1px solid rgba(46,204,113,0.3);
+    border-radius: 20px;
+    padding: 3px 10px;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--green);
+  }
+
+  .coin-reward {
+    background: rgba(241,196,15,0.1);
+    border: 1px solid rgba(241,196,15,0.2);
+    border-radius: 20px;
+    padding: 3px 10px;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--gold);
+  }
+
+  .complete-btn {
+    background: linear-gradient(135deg, var(--green), var(--teal));
+    border: none;
+    border-radius: 10px;
+    padding: 8px 14px;
+    color: white;
+    font-family: 'Nunito', sans-serif;
+    font-size: 12px;
+    font-weight: 800;
+    cursor: pointer;
+    transition: all 0.15s;
+    white-space: nowrap;
+  }
+
+  .complete-btn:hover { transform: scale(1.05); }
+  .complete-btn:active { transform: scale(0.97); }
+
+  .completed-badge {
+    background: rgba(46,204,113,0.1);
+    border: 1px solid rgba(46,204,113,0.3);
+    border-radius: 10px;
+    padding: 8px 14px;
+    font-size: 12px;
+    font-weight: 800;
+    color: var(--green);
+    white-space: nowrap;
+  }
+
+  /* STATS GRID */
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+
+  .stat-card {
+    background: var(--card);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 18px;
+    padding: 18px;
+    text-align: center;
+  }
+
+  .stat-icon { font-size: 32px; margin-bottom: 8px; }
+  .stat-value { font-family: 'Fredoka One', cursive; font-size: 28px; margin-bottom: 4px; }
+  .stat-label { font-size: 12px; color: var(--text2); font-weight: 600; }
+
+  /* AVATAR SCREEN */
+  .avatar-display {
+    background: var(--card);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 24px;
+    padding: 30px;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
+  .avatar-big {
+    width: 100px; height: 100px;
+    background: linear-gradient(135deg, var(--green), var(--teal));
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 54px;
+    margin: 0 auto 16px;
+    box-shadow: 0 0 40px rgba(46,204,113,0.3);
+  }
+
+  .avatar-name-big {
+    font-family: 'Fredoka One', cursive;
+    font-size: 26px;
+    margin-bottom: 6px;
+  }
+
+  .level-display {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(241,196,15,0.15);
+    border: 1px solid rgba(241,196,15,0.3);
+    border-radius: 20px;
+    padding: 4px 16px;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--gold);
+    margin-bottom: 20px;
+  }
+
+  .xp-bar-full {
+    background: var(--bg3);
+    border-radius: 10px;
+    height: 10px;
+    overflow: hidden;
+    margin-bottom: 6px;
+  }
+
+  .xp-bar-full-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--green), var(--teal));
+    border-radius: 10px;
+    transition: width 0.6s ease;
+  }
+
+  .xp-label-full {
+    font-size: 12px;
+    color: var(--text2);
+    text-align: right;
+  }
+
+  /* BADGES */
+  .badges-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+
+  .badge-card {
+    background: var(--card);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 16px;
+    padding: 16px 10px;
+    text-align: center;
+    transition: all 0.2s;
+  }
+
+  .badge-card.earned {
+    border-color: rgba(241,196,15,0.3);
+    background: rgba(241,196,15,0.05);
+  }
+
+  .badge-emoji { font-size: 32px; margin-bottom: 8px; display: block; }
+  .badge-name { font-size: 11px; font-weight: 700; margin-bottom: 4px; }
+  .badge-desc { font-size: 10px; color: var(--text2); }
+  .badge-locked { filter: grayscale(1); opacity: 0.4; }
+
+  /* LEADERBOARD */
+  .leaderboard-item {
+    background: var(--card);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 16px;
+    padding: 14px 18px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    transition: all 0.2s;
+  }
+
+  .leaderboard-item.me {
+    border-color: rgba(46,204,113,0.3);
+    background: rgba(46,204,113,0.05);
+  }
+
+  .rank-num {
+    font-family: 'Fredoka One', cursive;
+    font-size: 22px;
+    width: 32px;
+    text-align: center;
+    flex-shrink: 0;
+  }
+
+  .rank-1 { color: #f1c40f; }
+  .rank-2 { color: #bdc3c7; }
+  .rank-3 { color: #cd7f32; }
+
+  .lb-avatar {
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px;
+    flex-shrink: 0;
+  }
+
+  .lb-info { flex: 1; }
+  .lb-name { font-weight: 800; font-size: 14px; }
+  .lb-score { font-size: 12px; color: var(--text2); }
+
+  .lb-points {
+    font-family: 'Fredoka One', cursive;
+    font-size: 18px;
+    color: var(--green);
+  }
+
+  /* TOAST */
+  .toast {
+    position: fixed;
+    top: 80px;
+    left: 50%;
+    transform: translateX(-50%) translateY(-20px);
+    background: linear-gradient(135deg, #1e3a2a, #1a3a2a);
+    border: 1px solid rgba(46,204,113,0.4);
+    border-radius: 16px;
+    padding: 14px 24px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-weight: 700;
+    font-size: 14px;
+    color: var(--green);
+    z-index: 999;
+    opacity: 0;
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    pointer-events: none;
+    white-space: nowrap;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+  }
+
+  .toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  .toast-icon { font-size: 22px; }
+
+  /* MODAL */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.7);
+    backdrop-filter: blur(4px);
+    z-index: 200;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+
+  .modal-overlay.show { display: flex; }
+
+  .modal {
+    background: var(--card);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 24px;
+    padding: 30px;
+    max-width: 360px;
+    width: 100%;
+    text-align: center;
+    animation: popIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  @keyframes popIn {
+    from { transform: scale(0.8); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+  }
+
+  .modal-emoji { font-size: 60px; margin-bottom: 16px; display: block; }
+  .modal h3 { font-family: 'Fredoka One', cursive; font-size: 24px; margin-bottom: 8px; color: var(--green); }
+  .modal p { color: var(--text2); font-size: 14px; margin-bottom: 24px; line-height: 1.6; }
+
+  .modal-rewards {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+
+  .modal-reward-item {
+    background: var(--bg3);
+    border-radius: 12px;
+    padding: 12px 20px;
+    font-weight: 800;
+    font-size: 16px;
+  }
+
+  .modal-reward-item.xp { color: var(--green); }
+  .modal-reward-item.coin { color: var(--gold); }
+
+  .btn-modal {
+    background: linear-gradient(135deg, var(--green), var(--teal));
+    border: none;
+    border-radius: 14px;
+    padding: 14px 40px;
+    color: white;
+    font-family: 'Fredoka One', cursive;
+    font-size: 18px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .btn-modal:hover { transform: scale(1.03); }
+
+  /* WEEKLY CHALLENGE */
+  .challenge-card {
+    background: linear-gradient(135deg, #1a2a4a, #162238);
+    border: 1px solid rgba(52,152,219,0.3);
+    border-radius: 20px;
+    padding: 22px;
+    margin-bottom: 16px;
+  }
+
+  .challenge-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 14px;
+  }
+
+  .challenge-icon { font-size: 36px; }
+
+  .challenge-title {
+    font-family: 'Fredoka One', cursive;
+    font-size: 18px;
+    color: var(--blue);
+    margin-bottom: 2px;
+  }
+
+  .challenge-sub { font-size: 12px; color: var(--text2); }
+
+  .challenge-progress {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .challenge-bar {
+    flex: 1;
+    background: rgba(255,255,255,0.08);
+    border-radius: 10px;
+    height: 10px;
+    overflow: hidden;
+  }
+
+  .challenge-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--blue), #5dade2);
+    border-radius: 10px;
+    transition: width 0.6s ease;
+  }
+
+  .challenge-pct {
+    font-weight: 800;
+    font-size: 14px;
+    color: var(--blue);
+    white-space: nowrap;
+  }
+
+  /* EMPTY STATE */
+  .empty-state {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--text2);
+  }
+
+  .empty-state .empty-icon { font-size: 48px; margin-bottom: 12px; }
+  .empty-state p { font-size: 14px; line-height: 1.6; }
+
+
+  /* ===== MINI GAMES ===== */
+  .quiz-card {
+    background: var(--card);
+    border: 1px solid rgba(155,89,182,0.25);
+    border-radius: 20px;
+    padding: 22px;
+    margin-bottom: 16px;
+  }
+
+  .quiz-category {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(155,89,182,0.15);
+    border: 1px solid rgba(155,89,182,0.3);
+    border-radius: 20px;
+    padding: 3px 12px;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--purple);
+    margin-bottom: 12px;
+  }
+
+  .quiz-question {
+    font-weight: 800;
+    font-size: 16px;
+    margin-bottom: 16px;
+    line-height: 1.5;
+  }
+
+  .quiz-options {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+
+  .quiz-option {
+    background: var(--bg3);
+    border: 2px solid rgba(255,255,255,0.08);
+    border-radius: 12px;
+    padding: 12px 16px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    transition: all 0.18s;
+    text-align: left;
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .quiz-option:hover:not(.disabled) {
+    border-color: var(--purple);
+    background: rgba(155,89,182,0.1);
+  }
+
+  .quiz-option.correct {
+    border-color: var(--green);
+    background: rgba(46,204,113,0.12);
+    color: var(--green);
+  }
+
+  .quiz-option.wrong {
+    border-color: var(--red);
+    background: rgba(231,76,60,0.1);
+    color: var(--red);
+  }
+
+  .quiz-option.disabled { cursor: default; }
+
+  .quiz-opt-letter {
+    width: 26px; height: 26px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.08);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px;
+    font-weight: 800;
+    flex-shrink: 0;
+  }
+
+  .quiz-feedback {
+    border-radius: 12px;
+    padding: 12px 16px;
+    font-size: 13px;
+    font-weight: 700;
+    margin-bottom: 12px;
+    display: none;
+  }
+
+  .quiz-feedback.show { display: block; }
+  .quiz-feedback.correct { background: rgba(46,204,113,0.1); color: var(--green); border: 1px solid rgba(46,204,113,0.3); }
+  .quiz-feedback.wrong { background: rgba(231,76,60,0.08); color: #e74c3c; border: 1px solid rgba(231,76,60,0.2); }
+
+  .quiz-next-btn {
+    background: linear-gradient(135deg, var(--purple), #8e44ad);
+    border: none;
+    border-radius: 12px;
+    padding: 10px 20px;
+    color: white;
+    font-family: 'Fredoka One', cursive;
+    font-size: 15px;
+    cursor: pointer;
+    transition: all 0.15s;
+    display: none;
+  }
+
+  .quiz-next-btn.show { display: inline-block; }
+  .quiz-next-btn:hover { transform: scale(1.03); }
+
+  /* DRAG DROP */
+  .match-area {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 16px;
+  }
+
+  .match-col-title {
+    font-size: 12px;
+    font-weight: 800;
+    color: var(--text2);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+  }
+
+  .match-item {
+    background: var(--bg3);
+    border: 2px solid rgba(255,255,255,0.08);
+    border-radius: 10px;
+    padding: 10px 12px;
+    font-size: 13px;
+    font-weight: 700;
+    margin-bottom: 6px;
+    cursor: grab;
+    transition: all 0.15s;
+    user-select: none;
+  }
+
+  .match-item:active { cursor: grabbing; transform: scale(1.03); }
+  .match-item.dragging { opacity: 0.5; border-color: var(--purple); }
+  .match-item.matched-correct { border-color: var(--green); background: rgba(46,204,113,0.1); color: var(--green); cursor: default; }
+  .match-item.matched-wrong { border-color: var(--red); background: rgba(231,76,60,0.08); cursor: default; }
+
+  .drop-zone {
+    background: rgba(255,255,255,0.03);
+    border: 2px dashed rgba(255,255,255,0.12);
+    border-radius: 10px;
+    padding: 10px 12px;
+    font-size: 13px;
+    font-weight: 700;
+    margin-bottom: 6px;
+    min-height: 42px;
+    transition: all 0.15s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .drop-zone.drag-over {
+    border-color: var(--purple);
+    background: rgba(155,89,182,0.08);
+  }
+
+  .drop-zone.filled-correct { border-color: var(--green); background: rgba(46,204,113,0.08); border-style: solid; }
+  .drop-zone.filled-wrong { border-color: var(--red); background: rgba(231,76,60,0.06); border-style: solid; }
+  .drop-zone .drop-label { color: var(--text2); font-size: 12px; }
+
+  .match-check-btn {
+    background: linear-gradient(135deg, var(--teal), var(--blue));
+    border: none;
+    border-radius: 12px;
+    padding: 10px 20px;
+    color: white;
+    font-family: 'Fredoka One', cursive;
+    font-size: 15px;
+    cursor: pointer;
+    transition: all 0.15s;
+    margin-top: 8px;
+  }
+
+  .match-check-btn:hover { transform: scale(1.03); }
+
+  /* SCORE SUMMARY */
+  .quiz-summary {
+    background: var(--card);
+    border: 1px solid rgba(46,204,113,0.2);
+    border-radius: 20px;
+    padding: 28px;
+    text-align: center;
+    margin-bottom: 16px;
+  }
+
+  .quiz-summary .summary-icon { font-size: 56px; margin-bottom: 12px; display: block; }
+  .quiz-summary h3 { font-family: 'Fredoka One', cursive; font-size: 24px; color: var(--green); margin-bottom: 8px; }
+  .quiz-summary p { color: var(--text2); font-size: 14px; margin-bottom: 20px; }
+
+  .score-row {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-bottom: 20px;
+  }
+
+  .score-item {
+    background: var(--bg3);
+    border-radius: 14px;
+    padding: 14px 22px;
+    font-weight: 800;
+    font-size: 18px;
+  }
+
+  .score-item.xp { color: var(--green); }
+  .score-item.correct-count { color: var(--gold); }
+
+  .btn-restart {
+    background: linear-gradient(135deg, var(--purple), #8e44ad);
+    border: none;
+    border-radius: 12px;
+    padding: 12px 28px;
+    color: white;
+    font-family: 'Fredoka One', cursive;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .btn-restart:hover { transform: scale(1.03); }
+
+  /* BONUS GAME MODAL */
+  .bonus-header {
+    font-family: 'Fredoka One', cursive;
+    font-size: 20px;
+    color: var(--gold);
+    margin-bottom: 6px;
+  }
+
+  .bonus-sub {
+    font-size: 13px;
+    color: var(--text2);
+    margin-bottom: 20px;
+  }
+
+
+  /* ===== GAME MODE SELECTOR ===== */
+  .game-mode-card {
+    background: var(--card);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 18px;
+    padding: 18px;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .game-mode-card:hover {
+    transform: translateX(4px);
+    border-color: rgba(46,204,113,0.3);
+    background: rgba(46,204,113,0.05);
+  }
+  .gm-icon { font-size: 36px; flex-shrink: 0; }
+  .gm-info { flex: 1; }
+  .gm-title { font-weight: 800; font-size: 15px; margin-bottom: 3px; }
+  .gm-desc { font-size: 12px; color: var(--text2); }
+  .gm-reward {
+    background: rgba(46,204,113,0.15);
+    border: 1px solid rgba(46,204,113,0.3);
+    border-radius: 20px;
+    padding: 4px 12px;
+    font-size: 12px;
+    font-weight: 800;
+    color: var(--green);
+    flex-shrink: 0;
+  }
+
+  /* ===== CLICK CATCH GAME ===== */
+  .catch-arena {
+    background: var(--bg3);
+    border-radius: 18px;
+    position: relative;
+    height: 320px;
+    overflow: hidden;
+    margin-bottom: 16px;
+    border: 2px solid rgba(255,255,255,0.06);
+    cursor: pointer;
+    user-select: none;
+  }
+  .catch-item {
+    position: absolute;
+    font-size: 32px;
+    cursor: pointer;
+    transition: transform 0.1s;
+    user-select: none;
+    animation: fallDown linear forwards;
+  }
+  .catch-item:hover { transform: scale(1.2); }
+  @keyframes fallDown {
+    from { top: -50px; }
+    to { top: 110%; }
+  }
+  .catch-scorebar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--card);
+    border-radius: 14px;
+    padding: 12px 18px;
+    margin-bottom: 12px;
+  }
+  .catch-stat { text-align: center; }
+  .catch-stat-val { font-family: 'Fredoka One', cursive; font-size: 22px; }
+  .catch-stat-lbl { font-size: 11px; color: var(--text2); font-weight: 700; }
+  .catch-timer-bar {
+    background: var(--bg3);
+    border-radius: 10px;
+    height: 8px;
+    overflow: hidden;
+    margin-bottom: 16px;
+  }
+  .catch-timer-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--green), var(--orange));
+    border-radius: 10px;
+    transition: width 0.1s linear;
+  }
+  .catch-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(15,25,35,0.85);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-radius: 16px;
+    z-index: 10;
+  }
+  .catch-overlay h3 { font-family: 'Fredoka One', cursive; font-size: 28px; color: var(--green); margin-bottom: 8px; }
+  .catch-overlay p { color: var(--text2); font-size: 14px; margin-bottom: 20px; }
+  .btn-catch-start {
+    background: linear-gradient(135deg, var(--green), var(--teal));
+    border: none; border-radius: 14px; padding: 12px 28px;
+    color: white; font-family: 'Fredoka One', cursive; font-size: 18px;
+    cursor: pointer; transition: all 0.15s;
+  }
+  .btn-catch-start:hover { transform: scale(1.05); }
+
+  /* ===== RECIPE GAME ===== */
+  .recipe-area {
+    background: var(--card);
+    border-radius: 18px;
+    padding: 18px;
+    margin-bottom: 14px;
+  }
+  .recipe-title {
+    font-family: 'Fredoka One', cursive;
+    font-size: 20px;
+    margin-bottom: 6px;
+    color: var(--green);
+  }
+  .recipe-desc { font-size: 13px; color: var(--text2); margin-bottom: 16px; }
+  .recipe-plate {
+    background: var(--bg3);
+    border: 3px dashed rgba(46,204,113,0.3);
+    border-radius: 50%;
+    width: 180px; height: 180px;
+    margin: 0 auto 16px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    padding: 16px;
+    transition: all 0.2s;
+    position: relative;
+  }
+  .recipe-plate.drag-over {
+    border-color: var(--green);
+    background: rgba(46,204,113,0.08);
+    transform: scale(1.04);
+  }
+  .recipe-plate.complete {
+    border-color: var(--gold);
+    border-style: solid;
+    background: rgba(241,196,15,0.05);
+  }
+  .plate-item { font-size: 26px; animation: popIn 0.3s ease; }
+  .plate-empty-hint {
+    font-size: 12px;
+    color: var(--text2);
+    text-align: center;
+    position: absolute;
+  }
+  .ingredient-shelf {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+    margin-bottom: 14px;
+  }
+  .ingredient-chip {
+    background: var(--bg3);
+    border: 2px solid rgba(255,255,255,0.08);
+    border-radius: 12px;
+    padding: 8px 12px;
+    font-size: 20px;
+    cursor: grab;
+    transition: all 0.15s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    user-select: none;
+  }
+  .ingredient-chip span { font-size: 11px; font-weight: 700; color: var(--text2); }
+  .ingredient-chip:hover { transform: scale(1.1); border-color: rgba(255,255,255,0.2); }
+  .ingredient-chip.used { opacity: 0.3; cursor: default; pointer-events: none; }
+  .ingredient-chip.wrong-pick {
+    border-color: var(--red);
+    background: rgba(231,76,60,0.1);
+    animation: shake 0.3s ease;
+  }
+  @keyframes shake {
+    0%,100%{transform:translateX(0)} 25%{transform:translateX(-6px)} 75%{transform:translateX(6px)}
+  }
+  .recipe-progress {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+  .recipe-progress-bar {
+    flex: 1;
+    background: var(--bg3);
+    border-radius: 10px;
+    height: 8px;
+    overflow: hidden;
+  }
+  .recipe-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--green), var(--teal));
+    border-radius: 10px;
+    transition: width 0.4s ease;
+  }
+  .recipe-progress-label { font-size: 12px; font-weight: 700; color: var(--green); }
+
+  /* ===== SORT GAME ===== */
+  .sort-arena {
+    margin-bottom: 14px;
+  }
+  .sort-bins {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+  .sort-bin {
+    background: var(--bg3);
+    border-radius: 16px;
+    padding: 14px;
+    min-height: 120px;
+    border: 2px dashed rgba(255,255,255,0.1);
+    transition: all 0.2s;
+  }
+  .sort-bin.healthy-bin { border-color: rgba(46,204,113,0.25); }
+  .sort-bin.unhealthy-bin { border-color: rgba(231,76,60,0.25); }
+  .sort-bin.drag-over { transform: scale(1.02); }
+  .sort-bin.healthy-bin.drag-over { background: rgba(46,204,113,0.08); border-color: var(--green); }
+  .sort-bin.unhealthy-bin.drag-over { background: rgba(231,76,60,0.06); border-color: var(--red); }
+  .sort-bin-title {
+    font-weight: 800;
+    font-size: 13px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .sort-items-pile {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+    margin-bottom: 16px;
+  }
+  .sort-item {
+    background: var(--card);
+    border: 2px solid rgba(255,255,255,0.1);
+    border-radius: 12px;
+    padding: 8px 10px;
+    font-size: 20px;
+    cursor: grab;
+    transition: all 0.15s;
+    user-select: none;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .sort-item span { font-size: 10px; color: var(--text2); font-weight: 700; }
+  .sort-item:hover { transform: scale(1.1); }
+  .sort-item.placed { opacity: 0.3; cursor: default; pointer-events: none; }
+  .sort-bin-items { display: flex; flex-wrap: wrap; gap: 6px; min-height: 40px; }
+  .bin-placed-item { font-size: 22px; }
+  .sort-check-btn {
+    background: linear-gradient(135deg, var(--orange), #e67e22);
+    border: none; border-radius: 12px; padding: 10px 22px;
+    color: white; font-family: 'Fredoka One', cursive; font-size: 15px;
+    cursor: pointer; transition: all 0.15s; margin-bottom: 12px;
+  }
+  .sort-check-btn:hover { transform: scale(1.03); }
+
+  .back-btn {
+    background: none;
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 10px;
+    padding: 8px 16px;
+    color: var(--text2);
+    font-family: 'Nunito', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    margin-bottom: 16px;
+    transition: all 0.15s;
+  }
+  .back-btn:hover { color: var(--text); border-color: rgba(255,255,255,0.2); }
+
+  /* SCROLLBAR */
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 10px; }
+</style>
+</head>
+<body>
+
+<!-- WELCOME SCREEN -->
+<div id="welcome" class="screen active">
+  <div class="logo-area">
+    <span class="logo-icon">🌿</span>
+    <div class="logo-title">Health Quest</div>
+    <div class="logo-sub">360° Sağlıklı Yaşam</div>
+  </div>
+  <div class="welcome-card">
+    <h2>Maceraya Başla! 🚀</h2>
+    <p>Günlük görevleri tamamla, XP kazan ve en sağlıklı öğrenci ol!</p>
+    <div class="input-group">
+      <label>Adın</label>
+      <input type="text" id="playerName" placeholder="İsmin nedir?" maxlength="20">
+    </div>
+    <div class="input-group">
+      <label>Avatarını Seç</label>
+      <div class="avatar-select">
+        <div class="avatar-opt selected" data-av="🦸" onclick="selectAvatar(this)">
+          <span class="av-emoji">🦸</span>KAHRAMAN
+        </div>
+        <div class="avatar-opt" data-av="🧙" onclick="selectAvatar(this)">
+          <span class="av-emoji">🧙</span>BÜYÜCÜ
+        </div>
+        <div class="avatar-opt" data-av="⚡" onclick="selectAvatar(this)">
+          <span class="av-emoji">⚡</span>SPORCU
+        </div>
+        <div class="avatar-opt" data-av="🌟" onclick="selectAvatar(this)">
+          <span class="av-emoji">🌟</span>YILDIZ
+        </div>
+      </div>
+    </div>
+    <button class="btn-primary" onclick="startGame()">Oyuna Başla ▶</button>
+  </div>
+</div>
+
+<!-- GAME SCREEN -->
+<div id="game" class="screen">
+  <!-- TOP BAR -->
+  <div class="topbar">
+    <div class="player-info">
+      <div class="player-avatar-sm" id="topAvatar">🦸</div>
+      <div class="player-name-area">
+        <div class="player-name-sm" id="topName">Oyuncu</div>
+        <div class="level-badge">⭐ <span id="topLevel">Seviye 1</span></div>
+      </div>
+    </div>
+    <div class="xp-bar-wrap">
+      <div class="xp-label">
+        <span>XP</span>
+        <span id="xpText">0/100</span>
+      </div>
+      <div class="xp-bar-bg">
+        <div class="xp-bar-fill" id="xpBarFill" style="width:0%"></div>
+      </div>
+    </div>
+    <div class="coins-display">🪙 <span id="coinsDisplay">0</span></div>
+  </div>
+
+  <!-- TABS -->
+  <div class="tabs">
+    <div class="tab active" onclick="switchTab('quests')">
+      <span class="tab-icon">📋</span>Görevler
+    </div>
+    <div class="tab" onclick="switchTab('avatar')">
+      <span class="tab-icon">🎮</span>Profil
+    </div>
+    <div class="tab" onclick="switchTab('league')">
+      <span class="tab-icon">🏆</span>Lig
+    </div>
+    <div class="tab" onclick="switchTab('challenges')">
+      <span class="tab-icon">🎯</span>Meydan
+    </div>
+    <div class="tab" onclick="switchTab('minigames')">
+      <span class="tab-icon">🧩</span>Quiz
+    </div>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="content">
+
+    <!-- QUESTS TAB -->
+    <div class="tab-content active" id="tab-quests">
+      <div class="section-header">
+        <h2>🌅 Günlük Görevler</h2>
+        <div class="day-badge" id="dayBadge">Gün 1</div>
+      </div>
+
+      <!-- Stats -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon">✅</div>
+          <div class="stat-value" id="statCompleted">0</div>
+          <div class="stat-label">Tamamlanan</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">🔥</div>
+          <div class="stat-value" id="statStreak">0</div>
+          <div class="stat-label">Gün Serisi</div>
+        </div>
+      </div>
+
+      <!-- Quest List -->
+      <div id="questList"></div>
+    </div>
+
+    <!-- AVATAR TAB -->
+    <div class="tab-content" id="tab-avatar">
+      <div class="avatar-display">
+        <div class="avatar-big" id="avatarBig">🦸</div>
+        <div class="avatar-name-big" id="avatarNameBig">Oyuncu</div>
+        <div class="level-display">⭐ <span id="avatarLevel">Seviye 1</span></div>
+        <div class="xp-bar-full">
+          <div class="xp-bar-full-fill" id="avatarXpBar" style="width:0%"></div>
+        </div>
+        <div class="xp-label-full" id="avatarXpLabel">0 / 100 XP</div>
+      </div>
+
+      <div class="section-header"><h2>🏅 Rozetler</h2></div>
+      <div class="badges-grid" id="badgesGrid"></div>
+    </div>
+
+    <!-- LEAGUE TAB -->
+    <div class="tab-content" id="tab-league">
+      <div class="section-header"><h2>🏆 Okul Sağlık Ligi</h2></div>
+      <div id="leaderboardList"></div>
+    </div>
+
+    <!-- CHALLENGES TAB -->
+    <div class="tab-content" id="tab-challenges">
+      <div class="section-header"><h2>🎯 Sosyal Görevler</h2></div>
+      <div id="challengesList"></div>
+    </div>
+
+    <!-- MINI GAMES TAB -->
+    <div class="tab-content" id="tab-minigames">
+      <div class="section-header">
+        <h2>🧩 Mini Oyunlar</h2>
+        <div class="day-badge">+XP kazan</div>
+      </div>
+
+      <!-- Game Mode Selector -->
+      <div id="gameModeSelector">
+        <div class="game-mode-card" onclick="startGameMode('quiz')">
+          <div class="gm-icon">🧠</div>
+          <div class="gm-info">
+            <div class="gm-title">Sağlık Quizi</div>
+            <div class="gm-desc">Çoktan seçmeli sorular + eşleştirme</div>
+          </div>
+          <div class="gm-reward">+20 XP</div>
+        </div>
+        <div class="game-mode-card" onclick="startGameMode('clickcatch')">
+          <div class="gm-icon">🎯</div>
+          <div class="gm-info">
+            <div class="gm-title">Sağlıklı Avı</div>
+            <div class="gm-desc">Sağlıklı besinleri tıkla, zararlılardan kaç!</div>
+          </div>
+          <div class="gm-reward">+30 XP</div>
+        </div>
+        <div class="game-mode-card" onclick="startGameMode('recipe')">
+          <div class="gm-icon">🥗</div>
+          <div class="gm-info">
+            <div class="gm-title">Tarif Ustası</div>
+            <div class="gm-desc">Sürükle-bırak ile sağlıklı tabak hazırla</div>
+          </div>
+          <div class="gm-reward">+25 XP</div>
+        </div>
+        <div class="game-mode-card" onclick="startGameMode('sort')">
+          <div class="gm-icon">🔀</div>
+          <div class="gm-info">
+            <div class="gm-title">Sağlıklı mı? Değil mi?</div>
+            <div class="gm-desc">Besinleri doğru kategoriye ayır</div>
+          </div>
+          <div class="gm-reward">+25 XP</div>
+        </div>
+      </div>
+
+      <div id="minigameArea"></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast">
+  <span class="toast-icon">✅</span>
+  <span id="toastMsg">Görev tamamlandı!</span>
+</div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal">
+    <span class="modal-emoji" id="modalEmoji">🎉</span>
+    <h3 id="modalTitle">Görev Tamamlandı!</h3>
+    <p id="modalDesc">Harika iş çıkardın!</p>
+    <div class="modal-rewards">
+      <div class="modal-reward-item xp" id="modalXP">+50 XP</div>
+      <div class="modal-reward-item coin" id="modalCoin">+10 🪙</div>
+    </div>
+    <button class="btn-modal" onclick="closeModal()">Harika! 🚀</button>
+  </div>
+</div>
+
+<script>
+// ======= STATE =======
+let player = {
+  name: 'Oyuncu',
+  avatar: '🦸',
+  level: 1,
+  xp: 0,
+  xpToNext: 100,
+  coins: 0,
+  streak: 0,
+  day: 1,
+  completedToday: 0,
+  totalCompleted: 0,
+  badges: []
+};
+
+let selectedAvatar = '🦸';
+
+const QUESTS = [
+  {
+    id: 'q1', type: 'steps', icon: '👟',
+    title: 'Adım Hedefi',
+    desc: 'Bugün en az 5.000 adım at',
+    target: 5000, unit: 'adım',
+    xp: 60, coins: 15,
+    progress: 0, completed: false
+  },
+  {
+    id: 'q2', type: 'nutrition', icon: '🥗',
+    title: 'Sağlıklı Öğle Yemeği',
+    desc: 'Öğle yemeğinde sebze veya meyve ye',
+    target: 1, unit: 'öğün',
+    xp: 40, coins: 10,
+    progress: 0, completed: false
+  },
+  {
+    id: 'q3', type: 'screen', icon: '📵',
+    title: 'Ekran Molası',
+    desc: 'Ders dışı ekran süresini 2 saatin altında tut',
+    target: 2, unit: 'saat',
+    xp: 50, coins: 12,
+    progress: 0, completed: false
+  },
+  {
+    id: 'q4', type: 'mind', icon: '🧘',
+    title: 'Mindfulness',
+    desc: '10 dakika derin nefes veya meditasyon yap',
+    target: 10, unit: 'dakika',
+    xp: 35, coins: 8,
+    progress: 0, completed: false
+  },
+  {
+    id: 'q5', type: 'nutrition', icon: '💧',
+    title: 'Su İç',
+    desc: 'Bugün en az 8 bardak su iç',
+    target: 8, unit: 'bardak',
+    xp: 30, coins: 8,
+    progress: 0, completed: false
+  },
+  {
+    id: 'q6', type: 'steps', icon: '🏃',
+    title: 'Aktif Mola',
+    desc: 'Öğle molasında 10 dk yürüyüş yap',
+    target: 10, unit: 'dakika',
+    xp: 25, coins: 6,
+    progress: 0, completed: false
+  }
+];
+
+const BADGES = [
+  { id: 'b1', emoji: '🌱', name: 'Tohumcuk', desc: 'İlk görevi tamamla', condition: () => player.totalCompleted >= 1 },
+  { id: 'b2', emoji: '🔥', name: 'Ateşli', desc: '3 günlük seri yap', condition: () => player.streak >= 3 },
+  { id: 'b3', emoji: '💪', name: 'Güçlü', desc: '10 görev tamamla', condition: () => player.totalCompleted >= 10 },
+  { id: 'b4', emoji: '🌊', name: 'Su Sever', desc: 'Su görevini 3 kez tamamla', condition: () => false },
+  { id: 'b5', emoji: '🧘', name: 'Huzurlu', desc: 'Mindfulness görevini yap', condition: () => QUESTS.find(q=>q.id==='q4')?.completed },
+  { id: 'b6', emoji: '⭐', name: 'Yıldız', desc: 'Seviye 3\'e ulaş', condition: () => player.level >= 3 },
+];
+
+const LEADERBOARD = [
+  { name: 'Ayşe Y.', avatar: '🌟', points: 1240, me: false },
+  { name: 'Mehmet K.', avatar: '⚡', points: 1180, me: false },
+  { name: 'Zeynep A.', avatar: '🧙', points: 1050, me: false },
+  { name: 'Can B.', avatar: '🦸', points: 920, me: false },
+  { name: 'Elif S.', avatar: '🌈', points: 870, me: false },
+];
+
+const CHALLENGES = [
+  {
+    icon: '📵', title: 'Screen-Free Day Challenge',
+    desc: 'Sınıfça ekransız bir gün geçirin!',
+    color: 'var(--blue)', progress: 65
+  },
+  {
+    icon: '🥦', title: 'Healthy Lunch Week',
+    desc: 'Bu hafta sağlıklı öğle yemeği yarışması',
+    color: 'var(--green)', progress: 40
+  },
+  {
+    icon: '🚶', title: 'Move Together Campaign',
+    desc: 'Okul olarak toplam 1 milyon adım!',
+    color: 'var(--orange)', progress: 28
+  }
+];
+
+// ======= FUNCTIONS =======
+function selectAvatar(el) {
+  document.querySelectorAll('.avatar-opt').forEach(o => o.classList.remove('selected'));
+  el.classList.add('selected');
+  selectedAvatar = el.dataset.av;
+}
+
+function startGame() {
+  const name = document.getElementById('playerName').value.trim();
+  if (!name) {
+    document.getElementById('playerName').focus();
+    document.getElementById('playerName').style.borderColor = 'var(--red)';
+    setTimeout(() => document.getElementById('playerName').style.borderColor = '', 1000);
+    return;
+  }
+  player.name = name;
+  player.avatar = selectedAvatar;
+
+  document.getElementById('welcome').classList.remove('active');
+  document.getElementById('game').classList.add('active');
+
+  updateUI();
+  renderQuests();
+  renderLeaderboard();
+  renderChallenges();
+  renderBadges();
+}
+
+function updateUI() {
+  document.getElementById('topAvatar').textContent = player.avatar;
+  document.getElementById('topName').textContent = player.name;
+  document.getElementById('topLevel').textContent = 'Seviye ' + player.level;
+  document.getElementById('coinsDisplay').textContent = player.coins;
+
+  const pct = Math.min(100, (player.xp / player.xpToNext) * 100);
+  document.getElementById('xpBarFill').style.width = pct + '%';
+  document.getElementById('xpText').textContent = player.xp + '/' + player.xpToNext;
+
+  // Avatar tab
+  document.getElementById('avatarBig').textContent = player.avatar;
+  document.getElementById('avatarNameBig').textContent = player.name;
+  document.getElementById('avatarLevel').textContent = 'Seviye ' + player.level;
+  document.getElementById('avatarXpBar').style.width = pct + '%';
+  document.getElementById('avatarXpLabel').textContent = player.xp + ' / ' + player.xpToNext + ' XP';
+
+  document.getElementById('statCompleted').textContent = player.completedToday;
+  document.getElementById('statStreak').textContent = player.streak;
+  document.getElementById('dayBadge').textContent = 'Gün ' + player.day;
+}
+
+function renderQuests() {
+  const list = document.getElementById('questList');
+  list.innerHTML = '';
+  QUESTS.forEach(q => {
+    const pct = Math.min(100, (q.progress / q.target) * 100);
+    list.innerHTML += `
+      <div class="quest-card ${q.type} ${q.completed ? 'completed' : ''}">
+        <div class="quest-icon">${q.icon}</div>
+        <div class="quest-info">
+          <div class="quest-title">${q.title}</div>
+          <div class="quest-desc">${q.desc}</div>
+          <div class="quest-progress-bar">
+            <div class="quest-progress-fill" style="width:${pct}%"></div>
+          </div>
+          <div class="quest-progress-label">${q.progress} / ${q.target} ${q.unit}</div>
+        </div>
+        <div class="quest-reward">
+          <div class="xp-reward">+${q.xp} XP</div>
+          <div class="coin-reward">+${q.coins} 🪙</div>
+          ${q.completed
+            ? `<div class="completed-badge">✅ Tamam</div>`
+            : `<button class="complete-btn" onclick="completeQuest('${q.id}')">Tamamla!</button>`
+          }
+        </div>
+      </div>
+    `;
+  });
+}
+
+function completeQuest(id) {
+  const q = QUESTS.find(x => x.id === id);
+  if (!q || q.completed) return;
+
+  q.progress = q.target;
+  q.completed = true;
+
+  player.xp += q.xp;
+  player.coins += q.coins;
+  player.completedToday++;
+  player.totalCompleted++;
+
+  // Level up check
+  while (player.xp >= player.xpToNext) {
+    player.xp -= player.xpToNext;
+    player.level++;
+    player.xpToNext = player.level * 100;
+    showToast('🎊 SEVİYE ATLADIN! Seviye ' + player.level);
+  }
+
+  // Streak
+  const allDone = QUESTS.every(q => q.completed);
+  if (allDone) {
+    player.streak++;
+    showToast('🔥 Tüm görevler tamamlandı! Seri: ' + player.streak + ' gün');
+  }
+
+  checkBadges();
+  showModal(q);
+  setTimeout(() => openBonusGame(), 1800);
+  updateUI();
+  renderQuests();
+  renderBadges();
+}
+
+function showModal(q) {
+  document.getElementById('modalEmoji').textContent = q.icon;
+  document.getElementById('modalTitle').textContent = q.title + ' Tamamlandı!';
+  document.getElementById('modalDesc').textContent = q.desc;
+  document.getElementById('modalXP').textContent = '+' + q.xp + ' XP';
+  document.getElementById('modalCoin').textContent = '+' + q.coins + ' 🪙';
+  document.getElementById('modalOverlay').classList.add('show');
+}
+
+function closeModal() {
+  document.getElementById('modalOverlay').classList.remove('show');
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  document.getElementById('toastMsg').textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+function checkBadges() {
+  BADGES.forEach(b => {
+    if (!player.badges.includes(b.id) && b.condition()) {
+      player.badges.push(b.id);
+      setTimeout(() => showToast('🏅 Yeni rozet: ' + b.name + '!'), 500);
+    }
+  });
+}
+
+function renderBadges() {
+  const grid = document.getElementById('badgesGrid');
+  grid.innerHTML = '';
+  BADGES.forEach(b => {
+    const earned = player.badges.includes(b.id) || b.condition();
+    grid.innerHTML += `
+      <div class="badge-card ${earned ? 'earned' : ''}">
+        <span class="badge-emoji ${earned ? '' : 'badge-locked'}">${b.emoji}</span>
+        <div class="badge-name">${b.name}</div>
+        <div class="badge-desc">${b.desc}</div>
+      </div>
+    `;
+  });
+}
+
+function renderLeaderboard() {
+  const list = document.getElementById('leaderboardList');
+
+  // Insert player
+  const myEntry = { name: player.name, avatar: player.avatar, points: player.xp + player.coins * 5, me: true };
+  const allEntries = [...LEADERBOARD, myEntry].sort((a, b) => b.points - a.points);
+
+  list.innerHTML = '';
+  allEntries.forEach((entry, i) => {
+    const rankClass = i === 0 ? 'rank-1' : i === 1 ? 'rank-2' : i === 2 ? 'rank-3' : '';
+    const rankIcon = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : (i + 1);
+    const bgColors = ['#2a1a3a', '#1a2a3a', '#2a2a1a', '#1a2a1a', '#2a1a1a', '#1a3a3a'];
+    list.innerHTML += `
+      <div class="leaderboard-item ${entry.me ? 'me' : ''}">
+        <div class="rank-num ${rankClass}">${rankIcon}</div>
+        <div class="lb-avatar" style="background:${bgColors[i % bgColors.length]}">${entry.avatar}</div>
+        <div class="lb-info">
+          <div class="lb-name">${entry.name}${entry.me ? ' (Sen)' : ''}</div>
+          <div class="lb-score">${entry.points} puan</div>
+        </div>
+        <div class="lb-points">${entry.points}</div>
+      </div>
+    `;
+  });
+}
+
+function renderChallenges() {
+  const list = document.getElementById('challengesList');
+  list.innerHTML = '';
+  CHALLENGES.forEach(c => {
+    list.innerHTML += `
+      <div class="challenge-card">
+        <div class="challenge-header">
+          <span class="challenge-icon">${c.icon}</span>
+          <div>
+            <div class="challenge-title">${c.title}</div>
+            <div class="challenge-sub">${c.desc}</div>
+          </div>
+        </div>
+        <div class="challenge-progress">
+          <div class="challenge-bar">
+            <div class="challenge-bar-fill" style="width:${c.progress}%;background:${c.color}"></div>
+          </div>
+          <div class="challenge-pct" style="color:${c.color}">${c.progress}%</div>
+        </div>
+      </div>
+    `;
+  });
+}
+
+function switchTab(tab) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+
+  const idx = ['quests','avatar','league','challenges','minigames'].indexOf(tab);
+  document.querySelectorAll('.tab')[idx].classList.add('active');
+  document.getElementById('tab-' + tab).classList.add('active');
+
+  if (tab === 'league') renderLeaderboard();
+  if (tab === 'minigames') renderMinigameTab();
+}
+
+// ======= MINI GAMES DATA =======
+const QUIZ_QUESTIONS = [
+  {
+    type: 'mcq',
+    category: '💧 Sıvı Tüketimi',
+    question: 'Günde kaç bardak su içmek önerilir?',
+    options: ['4 bardak', '6 bardak', '8 bardak', '12 bardak'],
+    correct: 2,
+    explanation: '✅ Doğru! Sağlıklı bir yetişkin için günde 8 bardak (yaklaşık 2 litre) su içmek önerilir.'
+  },
+  {
+    type: 'mcq',
+    category: '🥗 Beslenme',
+    question: 'Hangi besin grubu vücudun temel enerji kaynağıdır?',
+    options: ['Proteinler', 'Karbonhidratlar', 'Yağlar', 'Vitaminler'],
+    correct: 1,
+    explanation: '✅ Doğru! Karbonhidratlar beynin ve kasların birincil yakıtıdır. Tam tahıllar, meyveler iyi kaynaktır.'
+  },
+  {
+    type: 'mcq',
+    category: '📵 Ekran Süresi',
+    question: 'Uzun ekran kullanımı gözlerde ne sorununa yol açabilir?',
+    options: ['Renk körlüğü', 'Dijital göz yorgunluğu', 'Katarakt', 'Retina yırtılması'],
+    correct: 1,
+    explanation: '✅ Doğru! "Dijital göz yorgunluğu" uzun süreli ekran kullanımının en yaygın etkisidir. 20-20-20 kuralını dene!'
+  },
+  {
+    type: 'mcq',
+    category: '🏃 Fiziksel Aktivite',
+    question: 'Çocuklar ve gençler için günlük önerilen minimum egzersiz süresi nedir?',
+    options: ['15 dakika', '30 dakika', '60 dakika', '90 dakika'],
+    correct: 2,
+    explanation: '✅ Doğru! DSÖ, 5-17 yaş arası çocuklar için günde en az 60 dakika orta-yüksek yoğunluklu aktivite önerir.'
+  },
+  {
+    type: 'mcq',
+    category: '🧘 Ruh Sağlığı',
+    question: 'Mindfulness (bilinçli farkındalık) pratiğinin faydası nedir?',
+    options: ['Kas kütlesi artar', 'Stres azalır, konsantrasyon artar', 'Uyku süresi uzar', 'Metabolizma hızlanır'],
+    correct: 1,
+    explanation: '✅ Doğru! Mindfulness stresi azaltır, kaygıyı hafifletir ve dikkat süresini uzatır. Günde 10 dakika bile fark yaratır!'
+  },
+  {
+    type: 'mcq',
+    category: '🥦 Beslenme',
+    question: 'Hangi vitamin güneş ışığıyla vücutta üretilir?',
+    options: ['Vitamin A', 'Vitamin B12', 'Vitamin C', 'Vitamin D'],
+    correct: 3,
+    explanation: '✅ Doğru! D vitamini güneş ışığı etkisiyle deride üretilir. Kemik sağlığı ve bağışıklık sistemi için kritiktir.'
+  },
+  {
+    type: 'mcq',
+    category: '😴 Uyku',
+    question: 'Ergenler için önerilen gece uyku süresi kaç saattir?',
+    options: ['6-7 saat', '7-8 saat', '8-10 saat', '10-12 saat'],
+    correct: 2,
+    explanation: '✅ Doğru! 14-17 yaş arası ergenler için 8-10 saat uyku önerilir. Yeterli uyku öğrenme ve büyüme için şarttır.'
+  },
+  {
+    type: 'mcq',
+    category: '🍎 Beslenme',
+    question: 'Bir portakal ortalama kaç mg C vitamini içerir?',
+    options: ['10-20 mg', '50-70 mg', '70-90 mg', '200+ mg'],
+    correct: 2,
+    explanation: '✅ Doğru! Bir orta boy portakal yaklaşık 70-90 mg C vitamini içerir; bu günlük ihtiyacın tamamını karşılar!'
+  }
+];
+
+const MATCH_GAMES = [
+  {
+    category: '🥗 Besinler ve Faydaları',
+    pairs: [
+      { left: '🥕 Havuç', right: 'A vitamini kaynağı' },
+      { left: '🐟 Balık', right: 'Omega-3 yağ asitleri' },
+      { left: '🥛 Süt', right: 'Kalsiyum ve kemik sağlığı' },
+      { left: '🍌 Muz', right: 'Potasyum ve enerji' },
+    ]
+  },
+  {
+    category: '🏃 Aktivite ve Kalori',
+    pairs: [
+      { left: '30 dk yürüyüş', right: '~150 kalori' },
+      { left: '30 dk bisiklet', right: '~250 kalori' },
+      { left: '30 dk yüzme', right: '~300 kalori' },
+      { left: '30 dk koşu', right: '~350 kalori' },
+    ]
+  },
+  {
+    category: '💤 Uyku ve Yaş Grubu',
+    pairs: [
+      { left: 'Bebekler (0-1 yaş)', right: '14-17 saat' },
+      { left: 'Okul çağı (6-12)', right: '9-11 saat' },
+      { left: 'Ergenler (14-17)', right: '8-10 saat' },
+      { left: 'Yetişkinler (18+)', right: '7-9 saat' },
+    ]
+  }
+];
+
+// ======= MINI GAME STATE =======
+let quizState = {
+  currentQ: 0,
+  score: 0,
+  answered: false,
+  gameType: 'mcq', // 'mcq' or 'match'
+  matchGame: 0,
+  dragItem: null,
+  drops: {},
+  questions: [],
+  mode: 'tab' // 'tab' or 'bonus'
+};
+
+function buildQuizSession() {
+  // Mix: 4 MCQ + 1 match
+  const shuffled = [...QUIZ_QUESTIONS].sort(() => Math.random() - 0.5).slice(0, 5);
+  quizState.questions = shuffled;
+  quizState.currentQ = 0;
+  quizState.score = 0;
+  quizState.answered = false;
+}
+
+// renderMinigameTab now in new game mode section below
+
+function renderCurrentQuestion(containerId) {
+  const container = document.getElementById(containerId);
+  if (!container) return;
+
+  if (quizState.currentQ >= quizState.questions.length) {
+    renderQuizSummary(containerId);
+    return;
+  }
+
+  // Decide: show match game every 3rd question
+  if (quizState.currentQ === 2) {
+    renderMatchGame(containerId);
+    return;
+  }
+
+  const q = quizState.questions[quizState.currentQ];
+  quizState.answered = false;
+
+  const letters = ['A', 'B', 'C', 'D'];
+  const opts = q.options.map((o, i) => `
+    <button class="quiz-option" onclick="answerMCQ(${i}, '${containerId}')" id="opt_${containerId}_${i}">
+      <span class="quiz-opt-letter">${letters[i]}</span>
+      ${o}
+    </button>
+  `).join('');
+
+  const progress = quizState.currentQ + 1;
+  const total = quizState.questions.length + 1; // +1 for match
+
+  container.innerHTML = `
+    <div class="quiz-card">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+        <div class="quiz-category">${q.category}</div>
+        <div style="font-size:12px;color:var(--text2);font-weight:700">${progress}/${total}</div>
+      </div>
+      <div class="quiz-question">${q.question}</div>
+      <div class="quiz-options">${opts}</div>
+      <div class="quiz-feedback" id="feedback_${containerId}"></div>
+      <button class="quiz-next-btn" id="nextBtn_${containerId}" onclick="nextQuestion('${containerId}')">
+        Sonraki Soru ▶
+      </button>
+    </div>
+  `;
+}
+
+function answerMCQ(idx, containerId) {
+  if (quizState.answered) return;
+  quizState.answered = true;
+
+  const q = quizState.questions[quizState.currentQ];
+  const feedback = document.getElementById('feedback_' + containerId);
+  const nextBtn = document.getElementById('nextBtn_' + containerId);
+  const letters = ['A','B','C','D'];
+
+  document.querySelectorAll(`#${containerId} .quiz-option`).forEach((btn, i) => {
+    btn.classList.add('disabled');
+    if (i === q.correct) btn.classList.add('correct');
+    else if (i === idx && idx !== q.correct) btn.classList.add('wrong');
+  });
+
+  if (idx === q.correct) {
+    quizState.score++;
+    feedback.className = 'quiz-feedback correct show';
+    feedback.innerHTML = q.explanation;
+    if (quizState.mode === 'tab') {
+      player.xp += 20;
+      player.coins += 5;
+      while (player.xp >= player.xpToNext) {
+        player.xp -= player.xpToNext;
+        player.level++;
+        player.xpToNext = player.level * 100;
+      }
+      updateUI();
+      showToast('🧠 Doğru! +20 XP +5🪙');
+    }
+  } else {
+    feedback.className = 'quiz-feedback wrong show';
+    feedback.innerHTML = '❌ Yanlış. ' + q.explanation;
+  }
+
+  nextBtn.classList.add('show');
+}
+
+function nextQuestion(containerId) {
+  quizState.currentQ++;
+  renderCurrentQuestion(containerId);
+}
+
+// ===== MATCH GAME =====
+function renderMatchGame(containerId) {
+  const game = MATCH_GAMES[Math.floor(Math.random() * MATCH_GAMES.length)];
+  const pairs = [...game.pairs].sort(() => Math.random() - 0.5);
+  const rightItems = pairs.map(p => p.right).sort(() => Math.random() - 0.5);
+
+  quizState.drops = {};
+  quizState.matchPairs = pairs;
+  quizState.matchAnswered = false;
+
+  const leftCols = pairs.map((p, i) => `
+    <div class="drop-zone" id="drop_${containerId}_${i}" 
+      ondragover="dragOver(event)" 
+      ondragleave="dragLeave(event)"
+      ondrop="dropItem(event, '${containerId}', ${i}, '${p.right.replace(/'/g,"\'")}')">
+      <span style="font-size:13px;font-weight:700">${p.left}</span>
+      <span class="drop-label" id="dropLabel_${containerId}_${i}">Buraya sürükle</span>
+    </div>
+  `).join('');
+
+  const rightCols = rightItems.map((r, i) => `
+    <div class="match-item" draggable="true" id="drag_${containerId}_${i}"
+      data-value="${r.replace(/"/g,'&quot;')}"
+      ondragstart="dragStart(event, '${r.replace(/'/g,"\'")}', '${containerId}', ${i})">
+      ${r}
+    </div>
+  `).join('');
+
+  const progress = quizState.currentQ + 1;
+  const total = quizState.questions.length + 1;
+
+  document.getElementById(containerId).innerHTML = `
+    <div class="quiz-card">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+        <div class="quiz-category">${game.category}</div>
+        <div style="font-size:12px;color:var(--text2);font-weight:700">${progress}/${total}</div>
+      </div>
+      <div class="quiz-question">Soldaki kavramlarla sağdaki açıklamaları eşleştir! 🔗</div>
+      <div class="match-area">
+        <div>
+          <div class="match-col-title">Kavramlar</div>
+          ${leftCols}
+        </div>
+        <div>
+          <div class="match-col-title">Açıklamalar</div>
+          ${rightCols}
+        </div>
+      </div>
+      <button class="match-check-btn" onclick="checkMatch('${containerId}')">Kontrol Et ✓</button>
+      <div class="quiz-feedback" id="feedback_${containerId}" style="margin-top:12px"></div>
+      <button class="quiz-next-btn" id="nextBtn_${containerId}" onclick="nextQuestion('${containerId}')">
+        Sonraki Soru ▶
+      </button>
+    </div>
+  `;
+}
+
+function dragStart(event, value, containerId, idx) {
+  quizState.dragItem = { value, containerId, idx };
+  event.target.classList.add('dragging');
+  event.dataTransfer.effectAllowed = 'move';
+}
+
+function dragOver(event) {
+  event.preventDefault();
+  event.currentTarget.classList.add('drag-over');
+}
+
+function dragLeave(event) {
+  event.currentTarget.classList.remove('drag-over');
+}
+
+function dropItem(event, containerId, dropIdx, correctValue) {
+  event.preventDefault();
+  event.currentTarget.classList.remove('drag-over');
+  if (!quizState.dragItem) return;
+
+  const { value, idx } = quizState.dragItem;
+  const dropZone = document.getElementById('drop_' + containerId + '_' + dropIdx);
+  const label = document.getElementById('dropLabel_' + containerId + '_' + dropIdx);
+  const dragEl = document.getElementById('drag_' + containerId + '_' + idx);
+
+  // Update drop zone visual
+  label.textContent = value;
+  label.style.color = 'var(--text)';
+  label.style.fontWeight = '700';
+  dropZone.style.borderStyle = 'solid';
+
+  // Store answer
+  quizState.drops[dropIdx] = { value, correct: correctValue };
+
+  // Hide dragged item
+  if (dragEl) dragEl.style.opacity = '0.3';
+  quizState.dragItem = null;
+}
+
+function checkMatch(containerId) {
+  if (quizState.matchAnswered) return;
+
+  let correct = 0;
+  const pairs = quizState.matchPairs;
+
+  pairs.forEach((p, i) => {
+    const drop = quizState.drops[i];
+    const zone = document.getElementById('drop_' + containerId + '_' + i);
+    if (drop && drop.value === p.right) {
+      correct++;
+      zone.classList.add('filled-correct');
+    } else if (drop) {
+      zone.classList.add('filled-wrong');
+    }
+  });
+
+  quizState.matchAnswered = true;
+  const feedback = document.getElementById('feedback_' + containerId);
+  const nextBtn = document.getElementById('nextBtn_' + containerId);
+
+  if (correct === pairs.length) {
+    quizState.score++;
+    feedback.className = 'quiz-feedback correct show';
+    feedback.innerHTML = '🎉 Mükemmel! Tüm eşleştirmeler doğru!';
+    if (quizState.mode === 'tab') {
+      player.xp += 30;
+      player.coins += 8;
+      while (player.xp >= player.xpToNext) {
+        player.xp -= player.xpToNext;
+        player.level++;
+        player.xpToNext = player.level * 100;
+      }
+      updateUI();
+      showToast('🧩 Mükemmel eşleştirme! +30 XP +8🪙');
+    }
+  } else {
+    feedback.className = 'quiz-feedback wrong show';
+    feedback.innerHTML = `❌ ${correct}/${pairs.length} doğru. Tekrar dene!`;
+  }
+
+  nextBtn.classList.add('show');
+  quizState.currentQ++;
+}
+
+function renderQuizSummary(containerId) {
+  const totalQ = quizState.questions.length + 1;
+  const earnedXP = quizState.score * 20;
+
+  document.getElementById(containerId).innerHTML = `
+    <div class="quiz-summary">
+      <span class="summary-icon">${quizState.score >= 4 ? '🏆' : quizState.score >= 2 ? '🌟' : '💪'}</span>
+      <h3>${quizState.score >= 4 ? 'Muhteşem!' : quizState.score >= 2 ? 'İyi İş!' : 'Devam Et!'}</h3>
+      <p>${quizState.score}/${totalQ} soruyu doğru yanıtladın.</p>
+      <div class="score-row">
+        <div class="score-item correct-count">✅ ${quizState.score}/${totalQ}</div>
+        <div class="score-item xp">+${earnedXP} XP</div>
+      </div>
+      <button class="btn-restart" onclick="renderMinigameTab()">Tekrar Oyna 🔄</button>
+    </div>
+  `;
+
+  if (quizState.mode === 'bonus') {
+    setTimeout(() => closeBonusGame(), 3000);
+  }
+}
+
+// ===== BONUS GAME (after quest complete) =====
+function openBonusGame() {
+  buildQuizSession();
+  quizState.mode = 'bonus';
+  const overlay = document.getElementById('bonusGameOverlay');
+  const content = document.getElementById('bonusGameContent');
+
+  content.innerHTML = `
+    <div style="text-align:center;margin-bottom:16px">
+      <span style="font-size:40px">🎁</span>
+      <div class="bonus-header">Bonus Soru!</div>
+      <div class="bonus-sub">Doğru yanıtla ekstra XP kazan</div>
+    </div>
+    <div id="bonusQ"></div>
+    <button onclick="closeBonusGame()" style="background:none;border:none;color:var(--text2);font-size:12px;cursor:pointer;margin-top:12px;display:block;width:100%;text-align:center">Geç →</button>
+  `;
+
+  overlay.classList.add('show');
+
+  // Show only 1 MCQ
+  const q = QUIZ_QUESTIONS[Math.floor(Math.random() * QUIZ_QUESTIONS.length)];
+  quizState.questions = [q];
+  quizState.currentQ = 0;
+  quizState.answered = false;
+  quizState.mode = 'bonus';
+
+  const letters = ['A','B','C','D'];
+  const opts = q.options.map((o, i) => `
+    <button class="quiz-option" onclick="answerMCQ(${i}, 'bonusQ')" id="opt_bonusQ_${i}">
+      <span class="quiz-opt-letter">${letters[i]}</span>${o}
+    </button>
+  `).join('');
+
+  document.getElementById('bonusQ').innerHTML = `
+    <div class="quiz-category">${q.category}</div>
+    <div class="quiz-question" style="margin-top:8px">${q.question}</div>
+    <div class="quiz-options" style="margin-top:12px">${opts}</div>
+    <div class="quiz-feedback" id="feedback_bonusQ" style="margin-top:8px"></div>
+    <button class="quiz-next-btn" id="nextBtn_bonusQ" onclick="closeBonusGame()" style="margin-top:8px">
+      Devam ▶
+    </button>
+  `;
+}
+
+function closeBonusGame() {
+  document.getElementById('bonusGameOverlay').classList.remove('show');
+  quizState.mode = 'tab';
+}
+
+
+// ======= GAME MODE ROUTER =======
+function startGameMode(mode) {
+  document.getElementById('gameModeSelector').style.display = 'none';
+  document.getElementById('minigameArea').innerHTML = '';
+  if (mode === 'quiz') { buildQuizSession(); renderCurrentQuestion('minigameArea'); }
+  else if (mode === 'clickcatch') renderCatchGame();
+  else if (mode === 'recipe') renderRecipeGame();
+  else if (mode === 'sort') renderSortGame();
+}
+
+function backToModeSelector() {
+  document.getElementById('gameModeSelector').style.display = 'block';
+  document.getElementById('minigameArea').innerHTML = '';
+  if (catchInterval) { clearInterval(catchInterval); catchInterval = null; }
+  if (catchSpawnInterval) { clearInterval(catchSpawnInterval); catchSpawnInterval = null; }
+}
+
+function renderMinigameTab() {
+  document.getElementById('gameModeSelector').style.display = 'block';
+  document.getElementById('minigameArea').innerHTML = '';
+  buildQuizSession();
+}
+
+// ======= CLICK CATCH GAME =======
+let catchScore = 0, catchLives = 3, catchInterval = null, catchSpawnInterval = null, catchRunning = false;
+const HEALTHY_ITEMS = ['🍎','🥦','🥕','🍇','🥑','🍓','🥝','🫐','🍋','🥗','💧','🌽','🍊','🥒'];
+const JUNK_ITEMS   = ['🍕','🍔','🍟','🍦','🍩','🧁','🥤','🍫','🍿','🧃'];
+
+function renderCatchGame() {
+  const area = document.getElementById('minigameArea');
+  area.innerHTML = `
+    <button class="back-btn" onclick="backToModeSelector()">← Geri</button>
+    <div class="catch-scorebar">
+      <div class="catch-stat"><div class="catch-stat-val" id="catchScore">0</div><div class="catch-stat-lbl">SKOR</div></div>
+      <div class="catch-stat"><div class="catch-stat-val" id="catchLives">❤️❤️❤️</div><div class="catch-stat-lbl">CAN</div></div>
+      <div class="catch-stat"><div class="catch-stat-val" id="catchCombo">x1</div><div class="catch-stat-lbl">COMBO</div></div>
+    </div>
+    <div class="catch-timer-bar"><div class="catch-timer-fill" id="catchTimerFill" style="width:100%"></div></div>
+    <div class="catch-arena" id="catchArena">
+      <div class="catch-overlay" id="catchOverlay">
+        <h3>🎯 Sağlıklı Avı</h3>
+        <p>Sağlıklı besinlere tıkla, zararlılardan kaç!<br>Her kaçırılan sağlıklı besin can götürür.</p>
+        <button class="btn-catch-start" onclick="startCatch()">Başla! ▶</button>
+      </div>
+    </div>
+    <div style="text-align:center;margin-top:10px;font-size:12px;color:var(--text2)">
+      ✅ Sağlıklı = tıkla &nbsp;|&nbsp; ❌ Abur cubur = tıklama!
+    </div>
+  `;
+}
+
+function startCatch() {
+  document.getElementById('catchOverlay').style.display = 'none';
+  catchScore = 0; catchLives = 3; catchRunning = true;
+  let combo = 1, timeLeft = 30000, lastTick = Date.now();
+  updateCatchUI(combo);
+
+  catchInterval = setInterval(() => {
+    const now = Date.now();
+    timeLeft -= (now - lastTick);
+    lastTick = now;
+    const pct = Math.max(0, (timeLeft / 30000) * 100);
+    const fill = document.getElementById('catchTimerFill');
+    if (fill) fill.style.width = pct + '%';
+    if (timeLeft <= 0) endCatch(combo);
+  }, 100);
+
+  let spawnDelay = 900;
+  function spawnLoop() {
+    if (!catchRunning) return;
+    spawnItem(combo);
+    spawnDelay = Math.max(400, spawnDelay - 15);
+    catchSpawnInterval = setTimeout(spawnLoop, spawnDelay);
+  }
+  spawnLoop();
+
+  function spawnItem(cmb) {
+    const arena = document.getElementById('catchArena');
+    if (!arena) return;
+    const isHealthy = Math.random() > 0.35;
+    const emoji = isHealthy
+      ? HEALTHY_ITEMS[Math.floor(Math.random()*HEALTHY_ITEMS.length)]
+      : JUNK_ITEMS[Math.floor(Math.random()*JUNK_ITEMS.length)];
+    const duration = Math.max(1.8, 3.5 - (30000 - Math.max(0, timeLeft)) / 15000);
+    const el = document.createElement('div');
+    el.className = 'catch-item';
+    el.textContent = emoji;
+    el.style.left = (Math.random() * 80 + 5) + '%';
+    el.style.animationDuration = duration + 's';
+    el.dataset.healthy = isHealthy;
+    el.onclick = () => {
+      if (!catchRunning) return;
+      el.remove();
+      if (isHealthy) {
+        combo = Math.min(combo + 1, 5);
+        catchScore += 10 * combo;
+        showFloaty(arena, '+' + (10*combo), el.style.left, true);
+      } else {
+        combo = 1;
+        catchLives--;
+        showFloaty(arena, '💔', el.style.left, false);
+        updateCatchUI(combo);
+        if (catchLives <= 0) { endCatch(combo); return; }
+      }
+      updateCatchUI(combo);
+    };
+    el.addEventListener('animationend', () => {
+      if (!el.parentNode) return;
+      el.remove();
+      if (isHealthy && catchRunning) {
+        combo = 1;
+        catchLives--;
+        updateCatchUI(combo);
+        if (catchLives <= 0) endCatch(combo);
+      }
+    });
+    arena.appendChild(el);
+  }
+}
+
+function showFloaty(arena, text, left, good) {
+  const f = document.createElement('div');
+  f.textContent = text;
+  f.style.cssText = `position:absolute;left:${left};top:50%;font-size:18px;font-weight:800;color:${good?'var(--green)':'var(--red)'};pointer-events:none;animation:fadeUp 0.8s ease forwards;z-index:20`;
+  arena.appendChild(f);
+  setTimeout(() => f.remove(), 800);
+}
+
+function updateCatchUI(combo) {
+  const s = document.getElementById('catchScore');
+  const l = document.getElementById('catchLives');
+  const c = document.getElementById('catchCombo');
+  if (s) s.textContent = catchScore;
+  if (l) l.textContent = '❤️'.repeat(Math.max(0, catchLives)) + '🖤'.repeat(Math.max(0, 3-catchLives));
+  if (c) { c.textContent = 'x' + combo; c.style.color = combo > 2 ? 'var(--gold)' : 'var(--text)'; }
+}
+
+function endCatch(combo) {
+  catchRunning = false;
+  clearInterval(catchInterval); catchInterval = null;
+  clearTimeout(catchSpawnInterval); catchSpawnInterval = null;
+  const xpEarned = Math.min(60, Math.floor(catchScore / 10) * 3);
+  player.xp += xpEarned; player.coins += Math.floor(xpEarned / 4);
+  while (player.xp >= player.xpToNext) { player.xp -= player.xpToNext; player.level++; player.xpToNext = player.level * 100; }
+  updateUI();
+  const arena = document.getElementById('catchArena');
+  if (!arena) return;
+  arena.querySelectorAll('.catch-item').forEach(e => e.remove());
+  arena.innerHTML = `<div class="catch-overlay" style="display:flex">
+    <h3>${catchScore >= 100 ? '🏆 Müthiş!' : catchScore >= 50 ? '⭐ Harika!' : '💪 İyi Çaba!'}</h3>
+    <p>Skor: <strong>${catchScore}</strong> puan<br>Kazanılan: +${xpEarned} XP</p>
+    <button class="btn-catch-start" onclick="renderCatchGame()">Tekrar Oyna 🔄</button>
+  </div>`;
+  showToast('🎯 Oyun bitti! +' + xpEarned + ' XP');
+}
+
+// ======= RECIPE GAME =======
+const RECIPES = [
+  {
+    name: 'Yeşil Salata 🥗', emoji: '🥗',
+    desc: 'Sağlıklı bir salata için doğru malzemeleri tabağa sürükle!',
+    correct: ['🥬','🍅','🥒','🫑','🧅'],
+    wrong:   ['🍕','🍔','🧁','🍟','🥤'],
+    all: ['🥬','🍅','🥒','🫑','🧅','🍕','🍔','🧁','🍟','🥤'],
+    labels: { '🥬':'Marul','🍅':'Domates','🥒':'Salatalık','🫑':'Biber','🧅':'Soğan','🍕':'Pizza','🍔':'Burger','🧁':'Kek','🍟':'Patates Kızartması','🥤':'Gazlı İçecek' }
+  },
+  {
+    name: 'Meyve Tabağı 🍎', emoji: '🍽️',
+    desc: 'Sağlıklı meyveleri tabağa koy, şekerlemeleri bırak!',
+    correct: ['🍎','🍇','🍓','🥝','🍊'],
+    wrong:   ['🍫','🍬','🧁','🍩','🍦'],
+    all: ['🍎','🍇','🍓','🥝','🍊','🍫','🍬','🧁','🍩','🍦'],
+    labels: { '🍎':'Elma','🍇':'Üzüm','🍓':'Çilek','🥝':'Kivi','🍊':'Portakal','🍫':'Çikolata','🍬':'Şeker','🧁':'Kek','🍩':'Donut','🍦':'Dondurma' }
+  },
+  {
+    name: 'Sağlıklı Kahvaltı 🥚', emoji: '🍳',
+    desc: 'Dengeli bir kahvaltı tabağı hazırla!',
+    correct: ['🥚','🥛','🍞','🧀','🍌'],
+    wrong:   ['🧁','🍟','🥤','🍫','🍩'],
+    all: ['🥚','🥛','🍞','🧀','🍌','🧁','🍟','🥤','🍫','🍩'],
+    labels: { '🥚':'Yumurta','🥛':'Süt','🍞':'Tam Buğday Ekmek','🧀':'Peynir','🍌':'Muz','🧁':'Kek','🍟':'Patates Kızartması','🥤':'Gazlı İçecek','🍫':'Çikolata','🍩':'Donut' }
+  }
+];
+
+let recipeState = { recipeIdx: 0, placed: [], mistakes: 0 };
+
+function renderRecipeGame() {
+  recipeState = { recipeIdx: Math.floor(Math.random()*RECIPES.length), placed: [], mistakes: 0 };
+  drawRecipe();
+}
+
+function drawRecipe() {
+  const recipe = RECIPES[recipeState.recipeIdx];
+  const area = document.getElementById('minigameArea');
+  const shuffled = [...recipe.all].sort(() => Math.random() - 0.5);
+
+  const chips = shuffled.map(em => `
+    <div class="ingredient-chip" id="chip_${em}" draggable="true"
+      ondragstart="recipeDragStart(event,'${em}')"
+      onclick="recipeClick('${em}')">
+      ${em}<span>${recipe.labels[em]}</span>
+    </div>
+  `).join('');
+
+  area.innerHTML = `
+    <button class="back-btn" onclick="backToModeSelector()">← Geri</button>
+    <div class="recipe-area">
+      <div class="recipe-title">${recipe.name}</div>
+      <div class="recipe-desc">${recipe.desc}</div>
+      <div class="recipe-progress">
+        <div class="recipe-progress-bar">
+          <div class="recipe-progress-fill" id="recipePBar" style="width:0%"></div>
+        </div>
+        <div class="recipe-progress-label" id="recipePLabel">0/${recipe.correct.length}</div>
+      </div>
+      <div class="recipe-plate" id="recipePlate"
+        ondragover="event.preventDefault();this.classList.add('drag-over')"
+        ondragleave="this.classList.remove('drag-over')"
+        ondrop="recipeDrop(event)">
+        <span class="plate-empty-hint" id="plateHint">Malzemeleri buraya sürükle 👆</span>
+      </div>
+      <div class="ingredient-shelf">${chips}</div>
+      <div class="quiz-feedback" id="recipeMsg"></div>
+    </div>
+  `;
+}
+
+let recipeDragEm = null;
+function recipeDragStart(e, em) { recipeDragEm = em; }
+
+function recipeClick(em) { processRecipeItem(em); }
+
+function recipeDrop(e) {
+  e.preventDefault();
+  document.getElementById('recipePlate').classList.remove('drag-over');
+  if (recipeDragEm) { processRecipeItem(recipeDragEm); recipeDragEm = null; }
+}
+
+function processRecipeItem(em) {
+  const recipe = RECIPES[recipeState.recipeIdx];
+  if (recipeState.placed.includes(em)) return;
+  const chip = document.getElementById('chip_' + em);
+  if (recipe.correct.includes(em)) {
+    recipeState.placed.push(em);
+    if (chip) chip.classList.add('used');
+    const plate = document.getElementById('recipePlate');
+    const hint = document.getElementById('plateHint');
+    if (hint) hint.style.display = 'none';
+    const item = document.createElement('span');
+    item.className = 'plate-item'; item.textContent = em;
+    plate.appendChild(item);
+    const pct = (recipeState.placed.length / recipe.correct.length) * 100;
+    document.getElementById('recipePBar').style.width = pct + '%';
+    document.getElementById('recipePLabel').textContent = recipeState.placed.length + '/' + recipe.correct.length;
+    const msg = document.getElementById('recipeMsg');
+    msg.className = 'quiz-feedback correct show';
+    msg.textContent = '✅ ' + recipe.labels[em] + ' eklendi!';
+    if (recipeState.placed.length === recipe.correct.length) {
+      setTimeout(() => finishRecipe(), 600);
+    }
+  } else {
+    recipeState.mistakes++;
+    if (chip) { chip.classList.add('wrong-pick'); setTimeout(() => chip.classList.remove('wrong-pick'), 400); }
+    const msg = document.getElementById('recipeMsg');
+    msg.className = 'quiz-feedback wrong show';
+    msg.textContent = '❌ ' + recipe.labels[em] + ' bu tarife uymuyor!';
+  }
+}
+
+function finishRecipe() {
+  const recipe = RECIPES[recipeState.recipeIdx];
+  const xp = Math.max(10, 25 - recipeState.mistakes * 3);
+  player.xp += xp; player.coins += Math.floor(xp/3);
+  while (player.xp >= player.xpToNext) { player.xp -= player.xpToNext; player.level++; player.xpToNext = player.level * 100; }
+  updateUI();
+  document.getElementById('minigameArea').innerHTML = `
+    <button class="back-btn" onclick="backToModeSelector()">← Geri</button>
+    <div class="quiz-summary">
+      <span class="summary-icon">${recipeState.mistakes === 0 ? '👨‍🍳' : '🥗'}</span>
+      <h3>${recipeState.mistakes === 0 ? 'Şef Yardımcısı!' : 'Harika Tabak!'}</h3>
+      <p>${recipe.name} hazır! ${recipeState.mistakes} hatalı deneme.</p>
+      <div class="score-row">
+        <div class="score-item xp">+${xp} XP</div>
+        <div class="score-item correct-count">+${Math.floor(xp/3)} 🪙</div>
+      </div>
+      <button class="btn-restart" onclick="renderRecipeGame()">Başka Tarif 🔄</button>
+    </div>
+  `;
+  showToast('👨‍🍳 Tarif tamamlandı! +' + xp + ' XP');
+}
+
+// ======= SORT GAME =======
+const SORT_ITEMS = [
+  { em:'🥦', name:'Brokoli', healthy:true },
+  { em:'🍕', name:'Pizza', healthy:false },
+  { em:'🥕', name:'Havuç', healthy:true },
+  { em:'🍔', name:'Burger', healthy:false },
+  { em:'🍎', name:'Elma', healthy:true },
+  { em:'🍟', name:'Patates Kızartması', healthy:false },
+  { em:'💧', name:'Su', healthy:true },
+  { em:'🥤', name:'Gazlı İçecek', healthy:false },
+  { em:'🥑', name:'Avokado', healthy:true },
+  { em:'🍩', name:'Donut', healthy:false },
+  { em:'🍇', name:'Üzüm', healthy:true },
+  { em:'🧁', name:'Kek', healthy:false },
+  { em:'🥗', name:'Salata', healthy:true },
+  { em:'🍫', name:'Çikolata', healthy:false },
+];
+
+let sortState = { dragItem: null, bins: { healthy:[], unhealthy:[] }, items: [] };
+
+function renderSortGame() {
+  sortState.items = [...SORT_ITEMS].sort(() => Math.random() - 0.5).slice(0, 8);
+  sortState.bins = { healthy:[], unhealthy:[] };
+  drawSort();
+}
+
+function drawSort() {
+  const area = document.getElementById('minigameArea');
+  const chips = sortState.items.map(item => `
+    <div class="sort-item ${sortState.bins.healthy.includes(item.em)||sortState.bins.unhealthy.includes(item.em)?'placed':''}"
+      id="sortchip_${item.em}" draggable="true"
+      ondragstart="sortDragStart(event,'${item.em}',${item.healthy})"
+      onclick="sortClick('${item.em}',${item.healthy})">
+      ${item.em}<span>${item.name}</span>
+    </div>
+  `).join('');
+
+  const hItems = sortState.bins.healthy.map(e => `<span class="bin-placed-item">${e}</span>`).join('');
+  const uItems = sortState.bins.unhealthy.map(e => `<span class="bin-placed-item">${e}</span>`).join('');
+  const allPlaced = sortState.items.every(i => sortState.bins.healthy.includes(i.em) || sortState.bins.unhealthy.includes(i.em));
+
+  area.innerHTML = `
+    <button class="back-btn" onclick="backToModeSelector()">← Geri</button>
+    <div class="quiz-card">
+      <div class="quiz-question">Besinleri doğru kategoriye sürükle veya tıkla! 🔀</div>
+      <div class="sort-bins">
+        <div class="sort-bin healthy-bin"
+          ondragover="event.preventDefault();this.classList.add('drag-over')"
+          ondragleave="this.classList.remove('drag-over')"
+          ondrop="sortDrop(event,true)">
+          <div class="sort-bin-title" style="color:var(--green)">✅ Sağlıklı</div>
+          <div class="sort-bin-items">${hItems}</div>
+        </div>
+        <div class="sort-bin unhealthy-bin"
+          ondragover="event.preventDefault();this.classList.add('drag-over')"
+          ondragleave="this.classList.remove('drag-over')"
+          ondrop="sortDrop(event,false)">
+          <div class="sort-bin-title" style="color:var(--red)">❌ Sağlıksız</div>
+          <div class="sort-bin-items">${uItems}</div>
+        </div>
+      </div>
+      <div class="sort-items-pile">${chips}</div>
+      <div class="quiz-feedback" id="sortMsg"></div>
+      ${allPlaced ? `<button class="sort-check-btn" onclick="checkSort()">Sonucu Gör ✓</button>` : ''}
+    </div>
+  `;
+}
+
+function sortDragStart(e, em, healthy) { sortState.dragItem = { em, healthy }; }
+
+function sortClick(em, healthy) { processSortItem(em, healthy, healthy); } // default: put in correct bin
+
+function sortDrop(e, binHealthy) {
+  e.preventDefault();
+  e.currentTarget.classList.remove('drag-over');
+  if (!sortState.dragItem) return;
+  processSortItem(sortState.dragItem.em, sortState.dragItem.healthy, binHealthy);
+  sortState.dragItem = null;
+}
+
+function processSortItem(em, isHealthy, binHealthy) {
+  if (sortState.bins.healthy.includes(em) || sortState.bins.unhealthy.includes(em)) return;
+  if (binHealthy) sortState.bins.healthy.push(em);
+  else sortState.bins.unhealthy.push(em);
+  drawSort();
+}
+
+function checkSort() {
+  let correct = 0;
+  sortState.items.forEach(item => {
+    if (item.healthy && sortState.bins.healthy.includes(item.em)) correct++;
+    else if (!item.healthy && sortState.bins.unhealthy.includes(item.em)) correct++;
+  });
+  const xp = Math.floor((correct / sortState.items.length) * 25);
+  player.xp += xp; player.coins += Math.floor(xp/4);
+  while (player.xp >= player.xpToNext) { player.xp -= player.xpToNext; player.level++; player.xpToNext = player.level * 100; }
+  updateUI();
+  document.getElementById('minigameArea').innerHTML = `
+    <button class="back-btn" onclick="backToModeSelector()">← Geri</button>
+    <div class="quiz-summary">
+      <span class="summary-icon">${correct === sortState.items.length ? '🌟' : '💪'}</span>
+      <h3>${correct === sortState.items.length ? 'Mükemmel!' : 'İyi İş!'}</h3>
+      <p>${correct}/${sortState.items.length} besini doğru sınıflandırdın.</p>
+      <div class="score-row">
+        <div class="score-item correct-count">✅ ${correct}/${sortState.items.length}</div>
+        <div class="score-item xp">+${xp} XP</div>
+      </div>
+      <button class="btn-restart" onclick="renderSortGame()">Tekrar Oyna 🔄</button>
+    </div>
+  `;
+  showToast('🔀 Sınıflandırma tamamlandı! +' + xp + ' XP');
+}
+
+// fadeUp animation for catch game
+const styleTag = document.createElement('style');
+styleTag.textContent = '@keyframes fadeUp { from{opacity:1;transform:translateY(0)} to{opacity:0;transform:translateY(-40px)} }';
+document.head.appendChild(styleTag);
+
+</script>
+</body>
+</html>
